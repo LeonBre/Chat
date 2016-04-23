@@ -1,0 +1,21 @@
+.parallax-container {
+      height: 275px;
+    }
+
+    .centerContainer{
+        text-align: center;
+        border: 1px #000000 grove;
+        border-radius: 20px;
+        margin-left:20%;
+        margin-right:20%;
+    }
+
+    .whiteBackground {
+      background: #FFF;
+    }
+
+    .header{
+    	color: #42a5f5;
+        font-weight: 300;
+
+    }
