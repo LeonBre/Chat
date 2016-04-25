@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
 <link rel="stylesheet" href="style.css" charset="utf-8">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 <body>
 
   <div class="parallax-container">
@@ -19,19 +20,29 @@
         <img src="https://onepagelove.com/wp-content/uploads/2014/03/opl-parallax-universe.jpg" />
     </div>
   </div>
-
-  <div class="centerContainer">
-    <div class="whiteBackground">
-    <h2 class="header">Simple Chat</h2>
-    <ul class="collection">
-      <div id="log"></div>
-    </ul>
-    <input type="text" name="text" value="" id="inpText">
-    <button type="button" name="Username festlegen" id="setUsername" class="waves-effect waves-light btn">Set username</button>
-    <button id="test" class="waves-effect waves-light btn">Click me to Send messages.</button>
+	<div class="row">
+		<div class="col l8 offset-l2">
+		  <div class="centerContainer">
+		    <div class="whiteBackground">
+		    <h2 class="header">Simple Chat</h2>
+		    <ul class="collection">
+		      <div id="log"></div>
+		    </ul>
+		    <input type="text" name="text" value="" id="inpText">
+		    <button type="button" name="Username festlegen" id="setUsername" class="waves-effect waves-light btn">Set username</button>
+		    <button id="test" class="waves-effect waves-light btn">Click me to Send messages.</button>
+		  </div>
+	  </div>
   </div>
-
+  <div class="col l2">
+    <ul class="collection">
+    <li class="collection-item">
+        <div id="users"></div>
+    </li>
+  </ul>
+  </div>
 </div>
+
 </body>
 <script>
 $(document).ready(function(){
@@ -43,11 +54,32 @@ $(document).ready(function(){
   function connect() {
     wsocket = new WebSocket("ws://gambopower.ddns.net:8080/WebsocketChat/chat");
     wsocket.onmessage = function(event) {
-      console.log(event.data);
-      $("#log").append("<li class=\"collection-item\">" + event.data + "</li>");
+      var jsonObject = JSON.parse(event.data);
+      if(jsonObject.action === "message"){
+        $("#log").append("<li class=\"collection-item\">" + jsonObject.message + "</li>");
+      }else if (jsonObject.action ==="userUpdate") {
+          var userList = jsonObject.userList;
+          for (var userName in userList) {
+            $("#users").empty();
+            $("#users").append("<span class=\"title\">" +userName+ "</span>")
+          }
+      }
     };
   }
   window.addEventListener("load", connect, false);
+
+  var sendMessage = function(textToSend){
+
+
+    f(wsocket.readyState == 1){
+        wsocket.send(textToSend);
+      }
+    else{
+        wsocket.onopen = function(e){
+            websocket.send(textToSend);
+        }
+    }
+  }
 
   $(document).ready(function() {
     $("#setUsername").click(function() {
@@ -56,13 +88,7 @@ $(document).ready(function(){
     });
 	   $("#test").click(function() {
        var textToSend = $("#inpText").val();
-       if(wsocket.readyState == 1){
-           wsocket.send(textToSend);
-         }
-       else{
-           wsocket.onopen = function(e){
-               websocket.send(textToSend);
-           }
+       sendMessage(textToSend);
        }
        $("#inpText").val("");
     });
@@ -70,14 +96,7 @@ $(document).ready(function(){
     $('#inpText').keypress(function (e) {
       if (e.which == 13) {
         var textToSend = $("#inpText").val();
-        if(wsocket.readyState == 1){
-            wsocket.send(textToSend);
-          }
-        else{
-            wsocket.onopen = function(e){
-                websocket.send(textToSend);
-            }
-        }
+        sendMessage(textToSend);
         $("#inpText").val("");
     }
   });

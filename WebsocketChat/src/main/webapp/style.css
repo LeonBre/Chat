@@ -6,8 +6,6 @@
         text-align: center;
         border: 1px #000000 grove;
         border-radius: 20px;
-        margin-left:20%;
-        margin-right:20%;
     }
 
     .whiteBackground {
@@ -17,5 +15,4 @@
     .header{
     	color: #42a5f5;
         font-weight: 300;
-
     }
