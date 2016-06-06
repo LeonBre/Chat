@@ -61,7 +61,12 @@ public class WebsocketServer {
     case "newMessage":
       try {
         for(Session sessionInstance:clients.keySet()) {
-          sessionInstance.getBasicRemote().sendText(clients.get(session) + " : " + jobject.get("newMessage").getAsString());
+          JsonObject jMessage = new JsonObject();
+          jMessage.addProperty("action", "message");
+          jMessage.addProperty("user", clients.get(session));
+          jMessage.addProperty("message", jobject.get("newMessage").getAsString());
+          sessionInstance.getBasicRemote()
+          .sendText(jMessage.getAsString());
         };
       } catch (IOException e) {
         e.printStackTrace();

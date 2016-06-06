@@ -56,7 +56,7 @@ $(document).ready(function(){
     wsocket.onmessage = function(event) {
       var jsonObject = JSON.parse(event.data);
       if(jsonObject.action === "message"){
-        $("#log").append("<li class=\"collection-item\">" + jsonObject.message + "</li>");
+        $("#log").append("<li class=\"collection-item\">" + jsonObject.user + ": " +jsonObject.message + "</li>");
       }else if (jsonObject.action ==="userUpdate") {
           var userList = jsonObject.userList;
           for (var userName in userList) {
