@@ -84,11 +84,10 @@ $(document).ready(function(){
       var username = prompt("Whats ur username?");
       wsocket.send("Username:" + username);
     });
-	   $("#test").click(function() {
-       var textToSend = $("#inpText").val();
-       sendMessage(textToSend);
-       }
-       $("#inpText").val("");
+	  $("#test").click(function() {
+      var textToSend = $("#inpText").val();
+      sendMessage(textToSend);
+      $("#inpText").val("");
     });
 
     $('#inpText').keypress(function (e) {
