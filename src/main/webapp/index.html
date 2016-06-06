@@ -58,14 +58,18 @@ $(document).ready(function(){
     wsocket = new WebSocket(url);
     wsocket.onmessage = function(event) {
       var jsonObject = JSON.parse(event.data);
-      if(jsonObject.action === "message"){
-        $("#log").append("<li class=\"collection-item\">" + jsonObject.user + ": " +jsonObject.message + "</li>");
-      }else if (jsonObject.action ==="userUpdate") {
+      switch (jsonObject.action) {
+        case "message":
+          $("#log").append("<li class=\"collection-item\">" + jsonObject.user + ": " +jsonObject.message + "</li>");
+          break;
+        case "userUpdate":
           var userList = jsonObject.userList;
-          for (var userName in userList) {
+          for (var i in userList){
+            username = userList[i].username;
             $("#users").empty();
-            $("#users").append("<span class=\"title\">" +userName+ "</span>")
+            $("#users").append("<span class=\"title\">" + username + "</span>")
           }
+          break;
       }
     };
   }

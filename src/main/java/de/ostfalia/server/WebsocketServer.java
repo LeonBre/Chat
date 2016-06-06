@@ -19,6 +19,7 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -58,6 +59,23 @@ public class WebsocketServer {
 		switch (command) {
     case "newUsername":
       clients.put(session, jobject.get("username").getAsString());
+      try {
+      for(Session sessionInstance:clients.keySet()) {
+        JsonObject userUpdate = new JsonObject();
+        userUpdate.addProperty("action", "userUpdate");
+        JsonArray userArray = new JsonArray();
+        for (String user : clients.values()) {
+          JsonObject userObject = new JsonObject();
+          userObject.addProperty("username", user);
+          userArray.add(userObject); 
+        }
+        userUpdate.add("userList", userArray);
+        System.out.println(userUpdate.toString());
+        sessionInstance.getBasicRemote().sendText(userUpdate.toString());
+      }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
       break;
     case "newMessage":
       try {
