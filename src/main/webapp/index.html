@@ -68,10 +68,8 @@ $(document).ready(function(){
   }
   window.addEventListener("load", connect, false);
 
-  var sendMessage = function(textToSend){
-
-
-    f(wsocket.readyState == 1){
+  var sendMessage = function(textToSend) {
+    if(wsocket.readyState == 1){
         wsocket.send(textToSend);
       }
     else{
