@@ -45,6 +45,9 @@
 
 </body>
 <script>
+var url2 = "ws://gambopower.ddns.net:8080/WebsocketChat/chat";
+var url = "ws://localhost:8080/WebsocketChat/chat"
+
 $(document).ready(function(){
     $('.parallax').parallax();
 });
@@ -52,7 +55,7 @@ $(document).ready(function(){
   var wsocket;
 
   function connect() {
-    wsocket = new WebSocket("ws://gambopower.ddns.net:8080/WebsocketChat/chat");
+    wsocket = new WebSocket(url);
     wsocket.onmessage = function(event) {
       var jsonObject = JSON.parse(event.data);
       if(jsonObject.action === "message"){
@@ -71,7 +74,10 @@ $(document).ready(function(){
   var sendMessage = function(textToSend) {
     if(wsocket.readyState == 1){
         console.log('SENDERINO:' + textToSend);
-        var message = JSON.stringify({action: "newMessage", newMessage: textToSend});
+        var sendingObject = new Object();
+        sendingObject.action = "newMessage";
+        sendingObject.newMessage = textToSend;
+        var message = JSON.stringify(sendingObject);
         wsocket.send(message);
       }
     else{

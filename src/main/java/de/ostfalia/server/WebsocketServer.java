@@ -51,6 +51,7 @@ public class WebsocketServer {
 	
 	@OnMessage
 	public void onMessage(Session session, String message) {
+	  System.out.println(message);
 	  JsonElement jelement = new JsonParser().parse(message);
 	  JsonObject jobject = jelement.getAsJsonObject();
 	  String command = jobject.get("action").getAsString();
@@ -64,9 +65,10 @@ public class WebsocketServer {
           JsonObject jMessage = new JsonObject();
           jMessage.addProperty("action", "message");
           jMessage.addProperty("user", clients.get(session));
+          System.out.println(jMessage.toString());
           jMessage.addProperty("message", jobject.get("newMessage").getAsString());
           sessionInstance.getBasicRemote()
-          .sendText(jMessage.getAsString());
+          .sendText(jMessage.toString());
         };
       } catch (IOException e) {
         e.printStackTrace();
@@ -87,6 +89,7 @@ public class WebsocketServer {
 	public void onError(Session session, Throwable throwable) {
 		clients.remove(session);
 		System.out.println("This should never happen!");
+		throwable.printStackTrace();
 	}
 	
 	
