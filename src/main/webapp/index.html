@@ -70,9 +70,12 @@ $(document).ready(function(){
 
   var sendMessage = function(textToSend) {
     if(wsocket.readyState == 1){
-        wsocket.send(textToSend);
+        console.log('SENDERINO:' + textToSend);
+        var message = JSON.stringify({action: "newMessage", newMessage: textToSend});
+        wsocket.send(message);
       }
     else{
+      console.console.log('WAITERINO');
         wsocket.onopen = function(e){
             websocket.send(textToSend);
         }
