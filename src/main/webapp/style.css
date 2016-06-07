@@ -16,3 +16,18 @@
     	color: #42a5f5;
         font-weight: 300;
     }
+
+    .usernameCollection{
+      text-align: center;
+    }
+    .userNameIcon{
+      font-size: 2rem;
+    }
+    .userNameList{
+      display: flex;
+      justify-content: center; /* align horizontal */
+      align-items: center; /* align vertical */
+    }
+    .usernameText{
+      padding: 10px;
+    }

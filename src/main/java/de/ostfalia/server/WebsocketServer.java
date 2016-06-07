@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Map;
-import java.util.Set;
 
 import javax.websocket.CloseReason;
 import javax.websocket.EndpointConfig;
@@ -34,8 +31,7 @@ public class WebsocketServer {
 	@OnOpen
 	public void onOpen(Session session, EndpointConfig config){
 		System.out.println("New chat with" + session.getId());
-		clients.put(session, "Anonyme Ananas");
-		
+		addUser(session, "Anonyme Ananas");
 		//Send new Usernamelist
 		try {
       for(Session sessionInstance:clients.keySet()) {
@@ -58,8 +54,40 @@ public class WebsocketServer {
 	  String command = jobject.get("action").getAsString();
 		switch (command) {
     case "newUsername":
-      clients.put(session, jobject.get("username").getAsString());
-      try {
+      addUser(session, jobject.get("username").getAsString());
+      break;
+    case "newMessage":
+      sendNewMessage(clients.get(session), jobject);
+      break;
+    default:
+      break;
+    }
+		
+	}
+	
+	public void addUser(Session session, String username) {
+	  clients.put(session, username);
+	  sendUpdateUsername();
+	}
+	
+	private void sendNewMessage(String username, JsonObject jobject) {
+	  try {
+      for(Session sessionInstance:clients.keySet()) {
+        JsonObject jMessage = new JsonObject();
+        jMessage.addProperty("action", "message");
+        jMessage.addProperty("user", username);
+        System.out.println(jMessage.toString());
+        jMessage.addProperty("message", jobject.get("newMessage").getAsString());
+        sessionInstance.getBasicRemote()
+        .sendText(jMessage.toString());
+      };
+    } catch (IOException e) {
+      e.printStackTrace();
+      }
+	}
+	
+	private void sendUpdateUsername() {
+	  try {
       for(Session sessionInstance:clients.keySet()) {
         JsonObject userUpdate = new JsonObject();
         userUpdate.addProperty("action", "userUpdate");
@@ -76,26 +104,6 @@ public class WebsocketServer {
       } catch (IOException e) {
         e.printStackTrace();
       }
-      break;
-    case "newMessage":
-      try {
-        for(Session sessionInstance:clients.keySet()) {
-          JsonObject jMessage = new JsonObject();
-          jMessage.addProperty("action", "message");
-          jMessage.addProperty("user", clients.get(session));
-          System.out.println(jMessage.toString());
-          jMessage.addProperty("message", jobject.get("newMessage").getAsString());
-          sessionInstance.getBasicRemote()
-          .sendText(jMessage.toString());
-        };
-      } catch (IOException e) {
-        e.printStackTrace();
-        }
-      break;
-    default:
-      break;
-    }
-		
 	}
 	
 	@OnClose

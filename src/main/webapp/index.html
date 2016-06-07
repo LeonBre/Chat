@@ -11,6 +11,7 @@
 </script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link rel="stylesheet" href="style.css" charset="utf-8">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 <body>
@@ -36,10 +37,10 @@
   </div>
   <div class="col l2">
     <ul class="collection">
-    <li class="collection-item">
-        <div id="users"></div>
-    </li>
-  </ul>
+      <li class="collection-header center-align"><h4>Users Online</h4></li>
+      <div id="users"></div>
+
+    </ul>
   </div>
 </div>
 
@@ -67,7 +68,12 @@ $(document).ready(function(){
           for (var i in userList){
             username = userList[i].username;
             $("#users").empty();
-            $("#users").append("<span class=\"title\">" + username + "</span>")
+            /*$("#users").append('<li class="collection-item usernameCollection">'
+                                + username + '</li>') */
+            usernameColor = 'green';
+            $('#users').append('<li class="collection-item userNameList"> '
+       + '<i class="material-icons circle ' + usernameColor + ' userNameIcon">add</i>'
+       + '<span class="title center-align usernameText">' + username + '</span></li>')
           }
           break;
       }
