@@ -1,7 +1,6 @@
 
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="utf-8">
   <title>WebSocket Test</title>
@@ -15,7 +14,6 @@
 <link rel="stylesheet" href="style.css" charset="utf-8">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 <body>
-
   <div class="parallax-container">
     <div class="parallax">
         <img src="https://onepagelove.com/wp-content/uploads/2014/03/opl-parallax-universe.jpg" />
@@ -25,16 +23,16 @@
 		<div class="col l8 offset-l2">
 		  <div class="centerContainer">
 		    <div class="whiteBackground">
-		    <h2 class="header">Simple Chat</h2>
-		    <ul class="collection">
-		      <div id="log"></div>
-		    </ul>
+		      <h2 class="header">Simple Chat</h2>
+		      <ul class="collection">
+		        <div id="log"></div>
+		      </ul>
 		    <input type="text" name="text" value="" id="inpText">
 		    <button type="button" name="Username festlegen" id="setUsername" class="waves-effect waves-light btn">Set username</button>
 		    <button id="test" class="waves-effect waves-light btn">Click me to Send messages.</button>
-		  </div>
-	  </div>
-  </div>
+		    </div>
+	    </div>
+    </div>
   <div class="col l2">
     <ul class="collection">
       <li class="collection-header center-align"><h4>Users Online</h4></li>
@@ -42,22 +40,19 @@
     </ul>
   </div>
 </div>
-
 </body>
 <script>
 var url = "ws://gambopower.ddns.net:8080/WebsocketChat/chat";
 var url2 = "ws://localhost:8080/WebsocketChat/chat"
+var wsocket;
 
 $(document).ready(function(){
     $('.parallax').parallax();
 });
-
-  var wsocket;
-
-  function connect() {
-    wsocket = new WebSocket(url);
-    wsocket.onmessage = function(event) {
-      var jsonObject = JSON.parse(event.data);
+function connect() {
+  wsocket = new WebSocket(url);
+  wsocket.onmessage = function(event) {
+    var jsonObject = JSON.parse(event.data);
       switch (jsonObject.action) {
         case "message":
           $("#log").append("<li class=\"collection-item\">" + jsonObject.user + ": " +jsonObject.message + "</li>");
@@ -67,8 +62,6 @@ $(document).ready(function(){
           for (var i in userList){
             username = userList[i].username;
             $("#users").empty();
-            /*$("#users").append('<li class="collection-item usernameCollection">'
-                                + username + '</li>') */
             usernameColor = 'green';
             $('#users').append('<li class="collection-item userNameList"> '
        + '<i class="material-icons circle ' + usernameColor + ' userNameIcon">add</i>'
@@ -79,7 +72,6 @@ $(document).ready(function(){
     };
   }
   window.addEventListener("load", connect, false);
-
   var sendMessage = function(textToSend) {
     if(wsocket.readyState == 1){
         var sendingObject = {};
@@ -94,7 +86,6 @@ $(document).ready(function(){
         }
     }
   }
-
   $(document).ready(function() {
     $("#setUsername").click(function() {
       var sendingUsername = {};
@@ -107,7 +98,6 @@ $(document).ready(function(){
       sendMessage(textToSend);
       $("#inpText").val("");
     });
-
     $('#inpText').keypress(function (e) {
       if (e.which == 13) {
         var textToSend = $("#inpText").val();
@@ -115,7 +105,6 @@ $(document).ready(function(){
         $("#inpText").val("");
     }
   });
-
 });
 
 </script>
