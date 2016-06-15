@@ -34,7 +34,7 @@ public class WebsocketServer {
 	@OnOpen
 	public void onOpen(Session session, EndpointConfig config){
 		System.out.println("New chat with" + session.getId());
-		addUser(session, "Anonyme Ananas");
+		addUser(session, RandomPicker.generateRandomUsername());
 		//Send new Usernamelist
 		try {
       for(Session sessionInstance:clients.keySet()) {

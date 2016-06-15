@@ -7,4 +7,12 @@ public final class RandomPicker {
     int randomPosition =(int) Math.round(Math.random() * possibleColorValues.length);
     return possibleColorValues[randomPosition];
   }
+  
+  public static String generateRandomUsername() {
+    String [] possibleRandomUsernames = {"Anonyme Ananas", "Anonymer Maulwurf", "Anonymer Karl der Käfer"
+        , "Anonymer Mannbärschwein", "Anonymes Riesenkrokodil", "Anonymer Dinosaurier" 
+        , "Anonymer Anonymer", "Anonymer Astronautenhelm", "Anonymer Apfel"};
+    int randomPosition =(int) Math.round(Math.random() * possibleRandomUsernames.length);
+    return possibleRandomUsernames[randomPosition];
+  }
 }
