@@ -42,8 +42,8 @@
 </div>
 </body>
 <script>
-var url = "ws://gambopower.ddns.net:8080/WebsocketChat/chat";
-var url2 = "ws://localhost:8080/WebsocketChat/chat"
+var url2 = "ws://gambopower.ddns.net:8080/WebsocketChat/chat";
+var url = "ws://localhost:8080/WebsocketChat/chat"
 var wsocket;
 
 $(document).ready(function(){
@@ -62,8 +62,7 @@ function connect() {
           $("#users").empty();
           for (var i = 0; i < userList.length; i++) {
             username = userList[i].username;
-            console.log(username)
-            usernameColor = getRandomColor();
+            usernameColor = userList[i].userColor;
             $('#users').append('<li class="collection-item userNameList"> '
        + '<i class="material-icons circle ' + usernameColor + ' userNameIcon">add</i>'
        + '<span class="title center-align usernameText">' + username + '</span></li>')
@@ -72,12 +71,6 @@ function connect() {
       }
     };
   }
-  function getRandomColor() {
-    randomColorOption = new Array("green", "red", "blue", "yellow", "black", "white")
-    randomNumber = Math.floor((Math.random() * randomColorOption.length))
-    return randomColorOption[randomNumber]
-  }
-
 
   window.addEventListener("load", connect, false);
   var sendMessage = function(textToSend) {

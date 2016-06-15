@@ -21,12 +21,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import de.ostfalia.entities.User;
+import de.ostfalia.helper.RandomPicker;
+
 @ServerEndpoint("/chat")
 public class WebsocketServer {
 
 	String allMessages = "";
-	private static Map<Session, String> clients =
-		    Collections.synchronizedMap(new HashMap<Session, String>());
+	private static Map<Session, User> clients =
+		    Collections.synchronizedMap(new HashMap<Session, User>());
 
 	@OnOpen
 	public void onOpen(Session session, EndpointConfig config){
@@ -35,7 +38,7 @@ public class WebsocketServer {
 		//Send new Usernamelist
 		try {
       for(Session sessionInstance:clients.keySet()) {
-        Collection<String> clientCollection = clients.values();
+        Collection<User> clientCollection = clients.values();
         Gson gson = new Gson();
         String json = gson.toJson(clientCollection);
         sessionInstance.getBasicRemote().sendText(json);
@@ -66,16 +69,18 @@ public class WebsocketServer {
 	}
 
 	public void addUser(Session session, String username) {
-	  clients.put(session, username);
+	  String color = RandomPicker.generateRandomColor();
+	  User newUser = new User(username, color);
+	  clients.put(session, newUser);
 	  sendUpdateUsername();
 	}
 
-	private void sendNewMessage(String username, JsonObject jobject) {
+	private void sendNewMessage(User user, JsonObject jobject) {
 	  try {
       for(Session sessionInstance:clients.keySet()) {
         JsonObject jMessage = new JsonObject();
         jMessage.addProperty("action", "message");
-        jMessage.addProperty("user", username);
+        jMessage.addProperty("username", user.getUsername());
         System.out.println(jMessage.toString());
         jMessage.addProperty("message", jobject.get("newMessage").getAsString());
         sessionInstance.getBasicRemote()
@@ -92,9 +97,10 @@ public class WebsocketServer {
         JsonObject userUpdate = new JsonObject();
         userUpdate.addProperty("action", "userUpdate");
         JsonArray userArray = new JsonArray();
-        for (String user : clients.values()) {
+        for (User user : clients.values()) {
           JsonObject userObject = new JsonObject();
-          userObject.addProperty("username", user);
+          userObject.addProperty("username", user.getUsername());
+          userObject.addProperty("userColor", user.getColor());
           userArray.add(userObject);
         }
         userUpdate.add("userList", userArray);
