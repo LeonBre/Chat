@@ -25,9 +25,9 @@ import com.google.gson.JsonParser;
 public class WebsocketServer {
 
 	String allMessages = "";
-	private static Map<Session, String> clients = 
+	private static Map<Session, String> clients =
 		    Collections.synchronizedMap(new HashMap<Session, String>());
-	
+
 	@OnOpen
 	public void onOpen(Session session, EndpointConfig config){
 		System.out.println("New chat with" + session.getId());
@@ -45,7 +45,7 @@ public class WebsocketServer {
       e.printStackTrace();
       }
 	}
-	
+
 	@OnMessage
 	public void onMessage(Session session, String message) {
 	  System.out.println(message);
@@ -62,14 +62,14 @@ public class WebsocketServer {
     default:
       break;
     }
-		
+
 	}
-	
+
 	public void addUser(Session session, String username) {
 	  clients.put(session, username);
 	  sendUpdateUsername();
 	}
-	
+
 	private void sendNewMessage(String username, JsonObject jobject) {
 	  try {
       for(Session sessionInstance:clients.keySet()) {
@@ -85,7 +85,7 @@ public class WebsocketServer {
       e.printStackTrace();
       }
 	}
-	
+
 	private void sendUpdateUsername() {
 	  try {
       for(Session sessionInstance:clients.keySet()) {
@@ -95,7 +95,7 @@ public class WebsocketServer {
         for (String user : clients.values()) {
           JsonObject userObject = new JsonObject();
           userObject.addProperty("username", user);
-          userArray.add(userObject); 
+          userArray.add(userObject);
         }
         userUpdate.add("userList", userArray);
         System.out.println(userUpdate.toString());
@@ -105,19 +105,21 @@ public class WebsocketServer {
         e.printStackTrace();
       }
 	}
-	
+
 	@OnClose
 	public void onClose(Session session, CloseReason closeReason) {
 		clients.remove(session);
+		sendUpdateUsername();
 	}
-	
+
 	@OnError
 	public void onError(Session session, Throwable throwable) {
 		clients.remove(session);
+		sendUpdateUsername();
 		System.out.println("This should never happen!");
 		throwable.printStackTrace();
 	}
-	
-	
-	
+
+
+
 }
